@@ -1,0 +1,27 @@
+getgenv().Running = true; -- ON = true, OFF = false
+
+local lp = game.Players.LocalPlayer;
+local Remotes = game:GetService("ReplicatedStorage").Remotes;
+local VirutalUser = game:GetService("VirtualUser");
+
+-- Anti AFK
+lp.Idled:connect(function()
+	VirutalUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
+	wait(0.2);
+	VirutalUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
+end);
+
+function Quest()
+	local QuestVal = lp:WaitForChild("QuestArea").Value;
+	Remotes.ClaimQuestReward:FireServer()  ;
+	Remotes.SetLockedArea:FireServer(QuestVal);
+end;
+
+function Magnet()
+	lp.Magnet.Value = 100000;
+end;
+
+while getgenv().Running and task.wait(0.3) do
+	Quest();
+	Magnet();
+end;
